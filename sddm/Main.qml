@@ -19,6 +19,65 @@ Item {
         onActivated: Qt.quit()
     }
 
+    // SDDM Authentication signals
+    Connections {
+        target: (typeof sddm !== "undefined") ? sddm : null
+
+        function onLoginSucceeded() {
+            loginBtn.busy = false
+            errorToast.isError = false
+            errorToast.message = "Welcome back!"
+        }
+
+        function onLoginFailed() {
+            loginBtn.busy = false
+            passwordInput.text = ""
+            errorToast.isError = true
+            errorToast.message = "Authentication failed. Please try again."
+            passwordInput.forceActiveFocus()
+        }
+
+        function onInformationMessage(message) {
+            errorToast.isError = false
+            errorToast.message = message
+        }
+    }
+
+    function handleLogin() {
+        errorToast.message = ""
+        if (usernameInput.text.trim().length === 0) {
+            errorToast.isError = true
+            errorToast.message = "Please enter your username"
+            usernameInput.forceActiveFocus()
+            return
+        }
+        if (passwordInput.text.length === 0) {
+            errorToast.isError = true
+            errorToast.message = "Please enter your password"
+            passwordInput.forceActiveFocus()
+            return
+        }
+
+        loginBtn.busy = true
+
+        if (typeof sddm !== "undefined") {
+            sddm.login(usernameInput.text.trim(), passwordInput.text, sessionSelector.selectedIndex)
+        } else {
+            // Simulated response in test mode
+            testTimer.restart()
+        }
+    }
+
+    Timer {
+        id: testTimer
+        interval: 600
+        onTriggered: {
+            loginBtn.busy = false
+            errorToast.isError = false
+            errorToast.message = "Test Mode: Authentication triggered for " + usernameInput.text
+        }
+    }
+
     // Base background gradient
     Rectangle {
         anchors.fill: parent
@@ -39,21 +98,24 @@ Item {
         opacity: 0.055
     }
 
+    // Central Interface
     ColumnLayout {
         anchors.centerIn: parent
         width: Math.round(AetherTheme.panelWidth * root.scaleFactor)
-        spacing: Math.round(16 * root.scaleFactor)
+        spacing: Math.round(14 * root.scaleFactor)
 
         Clock {
             scaleFactor: root.scaleFactor
             Layout.alignment: Qt.AlignHCenter
         }
 
-        Item {
-            Layout.preferredHeight: Math.round(12 * root.scaleFactor)
+        ErrorToast {
+            id: errorToast
+            scaleFactor: root.scaleFactor
+            Layout.fillWidth: true
         }
 
-        // Centered Login Card
+        // Login Card
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: Math.round(290 * root.scaleFactor)
@@ -88,22 +150,22 @@ Item {
                     id: usernameInput
                     scaleFactor: root.scaleFactor
                     Layout.fillWidth: true
-                    KeyNavigation.tab: passwordInput
+                    text: (typeof userModel !== "undefined" && userModel && userModel.lastUser) ? userModel.lastUser : ""
+                    onAccepted: passwordInput.forceActiveFocus()
                 }
 
                 PasswordField {
                     id: passwordInput
                     scaleFactor: root.scaleFactor
                     Layout.fillWidth: true
-                    KeyNavigation.backtab: usernameInput
+                    onAccepted: root.handleLogin()
                 }
 
                 LoginButton {
+                    id: loginBtn
                     scaleFactor: root.scaleFactor
                     Layout.fillWidth: true
-                    onClicked: {
-                        console.log("Login trigger for user:", usernameInput.text)
-                    }
+                    onClicked: root.handleLogin()
                 }
             }
         }
@@ -115,7 +177,38 @@ Item {
             font.pixelSize: Math.round(AetherTheme.fontSizeFootnote * root.scaleFactor)
             font.letterSpacing: AetherTheme.letterSpacingSubtle * root.scaleFactor
             Layout.alignment: Qt.AlignHCenter
-            Layout.topMargin: Math.round(6 * root.scaleFactor)
+            Layout.topMargin: Math.round(4 * root.scaleFactor)
+        }
+    }
+
+    // Bottom Navigation Bar
+    Item {
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: Math.round(28 * root.scaleFactor)
+        height: Math.round(42 * root.scaleFactor)
+
+        SessionSelector {
+            id: sessionSelector
+            scaleFactor: root.scaleFactor
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+        }
+
+        PowerMenu {
+            id: powerMenu
+            scaleFactor: root.scaleFactor
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    Component.onCompleted: {
+        if (usernameInput.text.length > 0) {
+            passwordInput.forceActiveFocus()
+        } else {
+            usernameInput.forceActiveFocus()
         }
     }
 }
