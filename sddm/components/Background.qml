@@ -39,8 +39,7 @@ Item {
         videoOutput: videoOutput
         source: root.videoSource
         loops: MediaPlayer.Infinite
-        muted: true
-        active: root.mode === "video" && root.videoSource != ""
+
         Component.onCompleted: {
             if (root.mode === "video" && root.videoSource != "") {
                 videoPlayer.play()
