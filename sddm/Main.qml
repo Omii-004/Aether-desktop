@@ -27,6 +27,7 @@ Item {
             loginBtn.busy = false
             errorToast.isError = false
             errorToast.message = "Welcome back!"
+            musicPlayer.fadeOutAndStop()
             fadeOutAnim.start()
         }
 
@@ -179,7 +180,7 @@ Item {
         }
     }
 
-    // Bottom Navigation Bar
+        // Bottom Navigation Bar
     Item {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -192,6 +193,12 @@ Item {
             scaleFactor: root.scaleFactor
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
+        }
+
+        MusicPlayer {
+            id: musicPlayer
+            scaleFactor: root.scaleFactor
+            anchors.centerIn: parent
         }
 
         PowerMenu {
