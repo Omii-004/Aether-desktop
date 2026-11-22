@@ -1,8 +1,7 @@
 import QtQuick
-import QtQuick.Layouts
 import "../theme"
 
-RowLayout {
+Row {
     id: root
 
     property real scaleFactor: 1.0
@@ -12,10 +11,12 @@ RowLayout {
         scaleFactor: root.scaleFactor
         iconText: "⏾"
         tooltipText: "Suspend"
-        visible: (typeof sddm === "undefined") || sddm.canSuspend
         onClicked: {
-            if (typeof sddm !== "undefined") sddm.suspend()
-            else console.log("SDDM action: Suspend")
+            if (typeof sddm !== "undefined" && sddm.canSuspend) {
+                sddm.suspend()
+            } else {
+                console.log("SDDM action: Suspend")
+            }
         }
     }
 
@@ -23,10 +24,12 @@ RowLayout {
         scaleFactor: root.scaleFactor
         iconText: "↻"
         tooltipText: "Reboot"
-        visible: (typeof sddm === "undefined") || sddm.canReboot
         onClicked: {
-            if (typeof sddm !== "undefined") sddm.reboot()
-            else console.log("SDDM action: Reboot")
+            if (typeof sddm !== "undefined" && sddm.canReboot) {
+                sddm.reboot()
+            } else {
+                console.log("SDDM action: Reboot")
+            }
         }
     }
 
@@ -34,10 +37,12 @@ RowLayout {
         scaleFactor: root.scaleFactor
         iconText: "⏻"
         tooltipText: "Power Off"
-        visible: (typeof sddm === "undefined") || sddm.canPowerOff
         onClicked: {
-            if (typeof sddm !== "undefined") sddm.powerOff()
-            else console.log("SDDM action: Power Off")
+            if (typeof sddm !== "undefined" && sddm.canPowerOff) {
+                sddm.powerOff()
+            } else {
+                console.log("SDDM action: Power Off")
+            }
         }
     }
 }
