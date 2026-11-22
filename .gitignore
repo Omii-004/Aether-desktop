@@ -1,0 +1,44 @@
+# Development & Editor artifacts
+*.swp
+*~
+.*.swp
+*.bak
+*.orig
+.vscode/
+.idea/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Logs & temp files
+*.log
+*.tmp
+core
+core.*
+
+# Qt & QML cache files
+*.qmlc
+*.jsc
+.qmlcache/
+.cache/
+.qt/
+
+# Build & packaging artifacts
+build/
+dist/
+*.tar.gz
+*.tar.xz
+*.zip
+*.deb
+*.pkg.tar.zst
+
+# Local development overrides
+*.local
+local_settings.conf
+
+# Local AI workspace & tracking files
+AGENTS.md
+PROJECT_CONTEXT.md
+ROADMAP.md
+TASKS.md
