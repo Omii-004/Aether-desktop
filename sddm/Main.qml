@@ -104,8 +104,10 @@ Item {
         width: Math.round(AetherTheme.panelWidth * root.scaleFactor)
         spacing: Math.round(14 * root.scaleFactor)
 
-        Clock {
+                Clock {
             scaleFactor: root.scaleFactor
+            timeFormat: (typeof config !== "undefined" && config.TimeFormat) ? config.TimeFormat : "hh:mm"
+            dateFormat: (typeof config !== "undefined" && config.DateFormat) ? config.DateFormat : "dddd, dd MMMM yyyy"
             Layout.alignment: Qt.AlignHCenter
         }
 
@@ -129,8 +131,8 @@ Item {
                 anchors.margins: Math.round(AetherTheme.panelPadding * root.scaleFactor)
                 spacing: Math.round(14 * root.scaleFactor)
 
-                Text {
-                    text: "Welcome back"
+                                Text {
+                    text: (typeof config !== "undefined" && config.Greeting) ? config.Greeting : "Welcome back"
                     color: AetherTheme.textPrimary
                     font.family: AetherTheme.fontFamily
                     font.pixelSize: Math.round(AetherTheme.fontSizeHeader * root.scaleFactor)
@@ -139,7 +141,7 @@ Item {
                 }
 
                 Text {
-                    text: "Enter your credentials to continue"
+                    text: (typeof config !== "undefined" && config.Subtitle) ? config.Subtitle : "Enter your credentials to continue"
                     color: AetherTheme.textSecondary
                     font.family: AetherTheme.fontFamily
                     font.pixelSize: Math.round(AetherTheme.fontSizeCaption * root.scaleFactor)
@@ -171,7 +173,7 @@ Item {
         }
 
         Text {
-            text: "A quiet space between worlds"
+            text: (typeof config !== "undefined" && config.Tagline) ? config.Tagline : "A quiet space between worlds"
             color: AetherTheme.textMuted
             font.family: AetherTheme.fontFamily
             font.pixelSize: Math.round(AetherTheme.fontSizeFootnote * root.scaleFactor)
