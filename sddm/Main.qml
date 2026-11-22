@@ -27,6 +27,7 @@ Item {
             loginBtn.busy = false
             errorToast.isError = false
             errorToast.message = "Welcome back!"
+            fadeOutAnim.start()
         }
 
         function onLoginFailed() {
@@ -41,6 +42,15 @@ Item {
             errorToast.isError = false
             errorToast.message = message
         }
+    }
+
+    // Session entry fade-out animation
+    NumberAnimation {
+        id: fadeOutAnim
+        target: root
+        property: "opacity"
+        to: 0.0
+        duration: AetherTheme.animSlow
     }
 
     function handleLogin() {
@@ -78,24 +88,10 @@ Item {
         }
     }
 
-    // Base background gradient
-    Rectangle {
-        anchors.fill: parent
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: AetherTheme.bgDark }
-            GradientStop { position: 0.5; color: AetherTheme.bgSurface }
-            GradientStop { position: 1.0; color: AetherTheme.bgDark }
-        }
-    }
-
-    // Ambient decorative glow
-    Rectangle {
-        width: Math.round(650 * root.scaleFactor)
-        height: width
-        radius: width / 2
-        anchors.centerIn: parent
-        color: AetherTheme.accentViolet
-        opacity: 0.055
+    // Multi-mode background engine (gradient, image, or video with breathing ambient glow)
+    Background {
+        id: bgEngine
+        scaleFactor: root.scaleFactor
     }
 
     // Central Interface
@@ -104,7 +100,7 @@ Item {
         width: Math.round(AetherTheme.panelWidth * root.scaleFactor)
         spacing: Math.round(14 * root.scaleFactor)
 
-                Clock {
+        Clock {
             scaleFactor: root.scaleFactor
             timeFormat: (typeof config !== "undefined" && config.TimeFormat) ? config.TimeFormat : "hh:mm"
             dateFormat: (typeof config !== "undefined" && config.DateFormat) ? config.DateFormat : "dddd, dd MMMM yyyy"
@@ -131,7 +127,7 @@ Item {
                 anchors.margins: Math.round(AetherTheme.panelPadding * root.scaleFactor)
                 spacing: Math.round(14 * root.scaleFactor)
 
-                                Text {
+                Text {
                     text: (typeof config !== "undefined" && config.Greeting) ? config.Greeting : "Welcome back"
                     color: AetherTheme.textPrimary
                     font.family: AetherTheme.fontFamily
