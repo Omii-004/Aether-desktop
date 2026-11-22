@@ -1,0 +1,2 @@
+module theme
+singleton AetherTheme 1.0 AetherTheme.qml
