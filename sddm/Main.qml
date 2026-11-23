@@ -13,10 +13,18 @@ Item {
 
     readonly property real scaleFactor: Screen.height / 1080
 
-    // Press Escape to exit test mode instantly
+    // Escape key safety: quits only in standalone test harness; resets fields in SDDM
     Shortcut {
         sequence: "Escape"
-        onActivated: Qt.quit()
+        onActivated: {
+            if (typeof sddm === "undefined") {
+                Qt.quit()
+            } else {
+                passwordInput.text = ""
+                errorToast.message = ""
+                passwordInput.forceActiveFocus()
+            }
+        }
     }
 
     // SDDM Authentication signals
