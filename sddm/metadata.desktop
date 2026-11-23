@@ -1,4 +1,3 @@
-
 [SddmGreeterTheme]
 Name=AETHER
 Description=Anime fantasy inspired SDDM theme
@@ -12,3 +11,4 @@ Screenshot=
 MainScript=Main.qml
 ConfigFile=theme.conf
 Theme-API=2.0
+QtVersion=6
