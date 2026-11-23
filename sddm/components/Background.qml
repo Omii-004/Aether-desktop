@@ -100,8 +100,14 @@ Item {
     VideoOutput {
         id: videoOutput
         anchors.fill: parent
-        fillMode: (root.backgroundFit.toLowerCase() === "contain") ?
-                  VideoOutput.PreserveAspectFit : VideoOutput.PreserveAspectCrop
+        fillMode: {
+            switch (root.backgroundFit.toLowerCase()) {
+                case "contain": return VideoOutput.PreserveAspectFit;
+                case "fill":    return VideoOutput.Stretch;
+                case "cover":
+                default:        return VideoOutput.PreserveAspectCrop;
+            }
+        }
         visible: root.mode === "video" && videoPlayer.playbackState === MediaPlayer.PlayingState
     }
 
@@ -110,7 +116,7 @@ Item {
         id: scrimOverlay
         anchors.fill: parent
         color: AetherTheme.scrimOverlay
-        opacity: root.backgroundDim
+        opacity: Math.max(0.0, Math.min(0.60, root.backgroundDim))
         visible: opacity > 0.001 && (root.mode === "image" || root.mode === "video")
     }
 
@@ -143,8 +149,7 @@ Item {
     }
 
     Component.onDestruction: {
-        if (videoPlayer.playbackState === MediaPlayer.PlayingState) {
-            videoPlayer.stop()
-        }
+        videoPlayer.stop()
+        videoPlayer.source = ""
     }
 }
