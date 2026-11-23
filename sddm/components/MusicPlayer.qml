@@ -6,9 +6,9 @@ Rectangle {
     id: root
 
     property real scaleFactor: 1.0
-    property url musicSource: (typeof config !== "undefined" && config.MusicFile) ? config.MusicFile : ""
+    property url musicSource: (typeof config !== "undefined" && config.MusicFile) ? Qt.resolvedUrl(config.MusicFile) : ""
     property bool autoPlay: (typeof config !== "undefined" && config.PlayMusic === "true")
-    property real defaultVolume: (typeof config !== "undefined" && config.Volume) ? Number(config.Volume) : 0.5
+    property real defaultVolume: (typeof config !== "undefined" && config.Volume && !isNaN(Number(config.Volume))) ? Number(config.Volume) : 0.5
     property string trackTitle: "AETHER Atmosphere"
 
     height: Math.round(34 * root.scaleFactor)
@@ -24,6 +24,7 @@ Rectangle {
         source: root.musicSource
         loops: MediaPlayer.Infinite
         audioOutput: audioOut
+        onErrorOccurred: (error, errorString) => console.log("AETHER MusicPlayer:", errorString)
 
         Component.onCompleted: {
             if (root.autoPlay && root.musicSource.toString().length > 0) {

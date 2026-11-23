@@ -93,7 +93,7 @@ aether-desktop/
 │   ├── aether-hyprlock.conf
 │   └── scripts/          # Resilient media query script
 ├── scripts/              # backup.sh, install.sh, restore.sh, uninstall.sh
-└── docs/                 # DESIGN_SYSTEM.md & documentation
+└── docs/                 # TROUBLESHOOTING.md & guides
 ```
 
 ---
