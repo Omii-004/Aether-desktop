@@ -8,16 +8,25 @@ if ! command -v playerctl >/dev/null 2>&1; then
     exit 0
 fi
 
-# Detect currently playing player
+# Detect active player (prioritizing Playing, falling back to Paused)
 PLAYER=""
+PAUSED_PLAYER=""
 while read -r p; do
-    if [ "$(playerctl --player="$p" status 2>/dev/null)" = "Playing" ]; then
+    status="$(playerctl --player="$p" status 2>/dev/null || true)"
+    if [ "$status" = "Playing" ]; then
         PLAYER="$p"
         break
+    elif [ "$status" = "Paused" ] && [ -z "$PAUSED_PLAYER" ]; then
+        PAUSED_PLAYER="$p"
     fi
 done < <(playerctl -l 2>/dev/null)
 
-# Exit silently if nothing is playing
+# Fall back to paused player if nothing is currently playing
+if [ -z "$PLAYER" ]; then
+    PLAYER="$PAUSED_PLAYER"
+fi
+
+# Exit silently if no player is active
 [ -z "$PLAYER" ] && exit 0
 
 # Handle control action arguments
