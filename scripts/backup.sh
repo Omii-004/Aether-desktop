@@ -40,7 +40,7 @@ fi
 cat <<EOF > "${BACKUP_DIR}/manifest.txt"
 AETHER Backup Manifest
 Date: $(date)
-Host: $(hostname)
+Host: ${HOSTNAME:-$(uname -n)}
 User: ${USER}
 EOF
 
